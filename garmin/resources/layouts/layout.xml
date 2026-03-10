@@ -1,0 +1,5 @@
+<layout id="MainLayout">
+    <label id="AppNameLabel" x="center" y="25%" text="TalkToAI" font="Graphics.FONT_LARGE" color="Graphics.COLOR_BLUE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
+    <label id="StatusLabel" x="center" y="50%" text="Ready" font="Graphics.FONT_MEDIUM" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
+    <label id="InstructionLabel" x="center" y="75%" text="Press Select to Ask AI" font="Graphics.FONT_XTINY" color="Graphics.COLOR_LT_GRAY" justification="Graphics.TEXT_JUSTIFY_CENTER" />
+</layout>
