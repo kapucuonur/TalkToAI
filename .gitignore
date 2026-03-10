@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Connect IQ
+bin/
+gen/
+*.prg
+*.debug.xml
+developer_key.der
+developer_key.pem
+
+# OS
+.DS_Store
