@@ -28,7 +28,8 @@ class VoiceAIDelegate extends WatchUi.BehaviorDelegate {
         System.println("Notifying iOS App via BLE...");
         // Signal the phone to start recording
         var characteristic = BluetoothLowEnergy.getService(serviceUUID).getCharacteristic(charUUID);
-        characteristic.requestWrite([83, 84, 65, 82, 84].toBuffer(), { :writeType => BluetoothLowEnergy.WRITE_TYPE_WITH_RESPONSE }); // "START"
+        var data = [83, 84, 65, 82, 84]b; // "START" in bytes
+        characteristic.requestWrite(data, { :writeType => BluetoothLowEnergy.WRITE_TYPE_WITH_RESPONSE });
         return true;
     }
 }
