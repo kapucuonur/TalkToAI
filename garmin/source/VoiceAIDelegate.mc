@@ -18,7 +18,8 @@ class VoiceAIDelegate extends WatchUi.BehaviorDelegate {
             :uuid => serviceUUID,
             :characteristics => [{
                 :uuid => charUUID,
-                :properties => (BluetoothLowEnergy.CH_PROP_NOTIFY | BluetoothLowEnergy.CH_PROP_READ | BluetoothLowEnergy.CH_PROP_WRITE)
+                // Using integer bitmask for properties: READ(2) | WRITE(8) | NOTIFY(16) = 26
+                :properties => 26
             }]
         };
         BluetoothLowEnergy.registerProfile(profile);
