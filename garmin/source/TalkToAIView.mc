@@ -14,22 +14,25 @@ class TalkToAIView extends WatchUi.View {
     }
 
     function onUpdate(dc) {
-        // Clear screen with a nice dark theme (AMOLED friendly)
+        System.println("View onUpdate called");
+        // Use a high-visibility color for debugging
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
 
         var width = dc.getWidth();
         var height = dc.getHeight();
 
-        // Draw a premium title
+        System.println("Screen Size: " + width + "x" + height);
+
+        // Draw Title
         dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(width / 2, height / 2 - 40, Graphics.FONT_LARGE, "TalkToAI", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Draw status
+        // Draw Status
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(width / 2, height / 2 + 10, Graphics.FONT_MEDIUM, _status, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Draw instruction
+        // Draw Footer
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
         dc.drawText(width / 2, height - 60, Graphics.FONT_XTINY, "Press Select to Ask AI", Graphics.TEXT_JUSTIFY_CENTER);
     }

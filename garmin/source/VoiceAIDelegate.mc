@@ -11,17 +11,23 @@ class VoiceAIDelegate extends WatchUi.BehaviorDelegate {
     private var _view;
 
     function initialize(view) {
+        System.println("Delegate Initializing...");
         BehaviorDelegate.initialize();
         _view = view;
-        // Register a delegate to handle BLE events
-        BluetoothLowEnergy.setDelegate(new VoiceAIBleDelegate(self));
+        if (Toybox has :BluetoothLowEnergy) {
+            System.println("Registering BLE Delegate...");
+            BluetoothLowEnergy.setDelegate(new VoiceAIBleDelegate(self));
+        } else {
+            System.println("BLE NOT SUPPORTED ON THIS DEVICE");
+        }
     }
 
     function onSelect() {
-        System.println("Searching for iPhone...");
+        System.println("Select Pressed!");
         _view.setStatus("Searching...");
-        // Start scanning for the iPhone service
-        BluetoothLowEnergy.setScanState(BluetoothLowEnergy.SCAN_STATE_SCANNING);
+        if (Toybox has :BluetoothLowEnergy) {
+            BluetoothLowEnergy.setScanState(BluetoothLowEnergy.SCAN_STATE_SCANNING);
+        }
         return true;
     }
 
