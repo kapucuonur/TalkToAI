@@ -1,11 +1,10 @@
 import Foundation
 import CoreBluetooth
 
-class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
-    var centralManager: CBCentralManager!
-    var garminPeripheral: CBPeripheral?
+class BLEManager: NSObject, CBPeripheralManagerDelegate {
+    var peripheralManager: CBPeripheralManager!
+    var transferCharacteristic: CBMutableCharacteristic?
     
-    // Replace with your specific Garmin Service and Characteristic UUIDs
     let serviceUUID = CBUUID(string: "AD68E776-857D-4F3D-9D2F-9B67DB11A77E")
     let characteristicUUID = CBUUID(string: "782079C1-F091-4D9D-A3D8-7241A5C0E28E")
     
@@ -13,56 +12,48 @@ class BLEManager: NSObject, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     override init() {
         super.init()
-        // State preservation and restoration is key for background operation
-        centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBCentralManagerOptionRestoreIdentifierKey: "TalkToAIBLERestore"])
+        peripheralManager = CBPeripheralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionRestoreIdentifierKey: "TalkToAIPeripheralRestore"])
     }
     
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        if central.state == .poweredOn {
-            centralManager.scanForPeripherals(withServices: [serviceUUID], options: [CBCentralManagerScanOptionAllowDuplicatesKey: false])
+    func peripheralManagerDidUpdateState(_ peripheral: CBPeripheralManager) {
+        if peripheral.state == .poweredOn {
+            setupPeripheral()
         }
     }
     
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        garminPeripheral = peripheral
-        garminPeripheral?.delegate = self
-        centralManager.stopScan()
-        centralManager.connect(peripheral, options: nil)
+    func setupPeripheral() {
+        let characteristic = CBMutableCharacteristic(
+            type: characteristicUUID,
+            properties: [.write, .read, .notify],
+            value: nil,
+            permissions: [.writeable, .readable]
+        )
+        
+        let service = CBMutableService(type: serviceUUID, primary: true)
+        service.characteristics = [characteristic]
+        
+        peripheralManager.add(service)
+        transferCharacteristic = characteristic
+        
+        // Start advertising
+        peripheralManager.startAdvertising([
+            CBAdvertisementDataServiceUUIDsKey: [serviceUUID],
+            CBAdvertisementDataLocalNameKey: "TalkToAiPhone"
+        ])
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        peripheral.discoverServices([serviceUUID])
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        if let services = peripheral.services {
-            for service in services {
-                peripheral.discoverCharacteristics([characteristicUUID], for: service)
+    func peripheralManager(_ peripheral: CBPeripheralManager, didReceiveWrite requests: [CBATTRequest]) {
+        for request in requests {
+            if let data = request.value, let command = String(data: data, encoding: .utf8) {
+                print("Received command: \(command)")
+                onCommandReceived?(command)
+                peripheral.respond(to: request, withResult: .success)
             }
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        if let characteristics = service.characteristics {
-            for characteristic in characteristics {
-                if characteristic.uuid == characteristicUUID {
-                    peripheral.setNotifyValue(true, for: characteristic)
-                }
-            }
-        }
-    }
-    
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        if let data = characteristic.value, let command = String(data: data, encoding: .utf8) {
-            onCommandReceived?(command)
-        }
-    }
-    
-    // Restore state if app was killed and watch sends a notification
-    func centralManager(_ central: CBCentralManager, willRestoreState dict: [String : Any]) {
-        if let peripherals = dict[CBCentralManagerRestoredPeripheralsKey] as? [CBPeripheral] {
-            garminPeripheral = peripherals.first
-            garminPeripheral?.delegate = self
-        }
+    // Handle background restoration
+    func peripheralManager(_ peripheral: CBPeripheralManager, willRestoreState dict: [String : Any]) {
+        // State restoration logic if needed
     }
 }
