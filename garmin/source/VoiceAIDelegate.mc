@@ -48,13 +48,15 @@ class VoiceAIBleDelegate extends BluetoothLowEnergy.BleDelegate {
 
     function onScanResults(scanResults) {
         for (var result = scanResults.next(); result != null; result = scanResults.next()) {
-            var uuids = result.getServiceUuids();
-            for (var uuid = uuids.next(); uuid != null; uuid = uuids.next()) {
-                if (uuid.equals(_serviceUUID)) {
-                    System.println("iPhone found! Connecting...");
-                    BluetoothLowEnergy.setScanState(BluetoothLowEnergy.SCAN_STATE_OFF);
-                    BluetoothLowEnergy.pairDevice(result);
-                    break;
+            if (result instanceof BluetoothLowEnergy.ScanResult) {
+                var uuids = result.getServiceUuids();
+                for (var uuid = uuids.next(); uuid != null; uuid = uuids.next()) {
+                    if (uuid.equals(_serviceUUID)) {
+                        System.println("iPhone found! Connecting...");
+                        BluetoothLowEnergy.setScanState(BluetoothLowEnergy.SCAN_STATE_OFF);
+                        BluetoothLowEnergy.pairDevice(result);
+                        break;
+                    }
                 }
             }
         }
