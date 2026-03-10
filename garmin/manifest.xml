@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
+    <iq:application entry="TalkToAIApp" id="a9d7e3c1-b2e4-4f5a-9d6c-2e87a1c0d2f3" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.1.0" name="@Strings.AppName" type="watch-app" version="1.0.0">
+        <iq:products>
+            <iq:product id="fenix847mm"/>
+            <iq:product id="fenix843mm"/>
+            <iq:product id="fenix851mm"/>
+            <iq:product id="fr965"/>
+        </iq:products>
+        <iq:permissions>
+            <iq:uses-permission id="BluetoothLowEnergy"/>
+            <iq:uses-permission id="Communications"/>
+        </iq:permissions>
+        <iq:languages>
+            <iq:language>eng</iq:language>
+        </iq:languages>
+    </iq:application>
+</iq:manifest>
