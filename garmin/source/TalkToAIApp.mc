@@ -7,6 +7,7 @@ class TalkToAIApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        return [ new TalkToAIView(), new VoiceAIDelegate() ];
+        var view = new TalkToAIView();
+        return [ view, new VoiceAIDelegate(view) ];
     }
 }

@@ -8,15 +8,18 @@ class VoiceAIDelegate extends WatchUi.BehaviorDelegate {
     private var serviceUUID = BluetoothLowEnergy.stringToUuid("AD68E776-857D-4F3D-9D2F-9B67DB11A77E");
     private var charUUID = BluetoothLowEnergy.stringToUuid("782079C1-F091-4D9D-A3D8-7241A5C0E28E");
     private var _device = null;
+    private var _view;
 
-    function initialize() {
+    function initialize(view) {
         BehaviorDelegate.initialize();
+        _view = view;
         // Register a delegate to handle BLE events
         BluetoothLowEnergy.setDelegate(new VoiceAIBleDelegate(self));
     }
 
     function onSelect() {
         System.println("Searching for iPhone...");
+        _view.setStatus("Searching...");
         // Start scanning for the iPhone service
         BluetoothLowEnergy.setScanState(BluetoothLowEnergy.SCAN_STATE_SCANNING);
         return true;
@@ -25,11 +28,13 @@ class VoiceAIDelegate extends WatchUi.BehaviorDelegate {
     // Called by the BleDelegate when the iPhone is found and connected
     function onDeviceConnected(device) {
         _device = device;
+        _view.setStatus("Found iPhone");
         var service = _device.getService(serviceUUID);
         if (service != null) {
             var characteristic = service.getCharacteristic(charUUID);
             if (characteristic != null) {
                 System.println("Sending START command...");
+                _view.setStatus("Asking AI...");
                 characteristic.requestWrite([83, 84, 65, 82, 84]b, { :writeType => BluetoothLowEnergy.WRITE_TYPE_WITH_RESPONSE });
             }
         }
