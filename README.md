@@ -18,6 +18,9 @@ This is a professional two-part system that allows you to talk to Gemini AI dire
 ## 🛠 Setup & Deployment
 1.  **Gemini API**: Get your key from [Google AI Studio](https://aistudio.google.com/) and paste it into `GeminiService.swift`.
 2.  **iOS App**: Open `/ios/TalkToAI` in Xcode. Enable "Background Modes" (Bluetooth LE accessories) in the project settings.
-3.  **Garmin App**: Import `VoiceAIDelegate.mc` into your Connect IQ project to enable the "TalkToAI" trigger.
+3.  **Permissions**: Open `ios/Info_Permissions.plist` and copy the keys into your Xcode project's `Info.plist`. This enables:
+    - **Background BLE**: Keeps the app connected when the phone is locked.
+    - **Microphone**: Allows recording your voice.
+4.  **Garmin App**: Import `VoiceAIDelegate.mc` into your Connect IQ project to enable the "TalkToAI" trigger.
 
 Built for Fenix 8 and newer Garmin watches with built-in speakers and microphones.

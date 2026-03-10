@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- Bluetooth Permissions -->
+    <key>NSBluetoothAlwaysUsageDescription</key>
+    <string>TalkToAI needs Bluetooth to connect to your Garmin watch and receive voice commands.</string>
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>TalkToAI uses Bluetooth to stay connected with your Garmin device.</string>
+    
+    <!-- Microphone Permission -->
+    <key>NSMicrophoneUsageDescription</key>
+    <string>TalkToAI uses the microphone (via your Garmin watch) to capture your voice commands for Gemini AI.</string>
+    
+    <!-- Background Modes -->
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>bluetooth-central</string>
+        <string>audio</string>
+    </array>
+    
+    <!-- Audio Session configuration for HFP -->
+    <key>UIRequiredDeviceCapabilities</key>
+    <array>
+        <string>armv7</string>
+        <string>bluetooth-le</string>
+    </array>
+</dict>
+</plist>
